@@ -40,16 +40,35 @@ export const useBirraStore = create<BirraStore>()((set, get) => ({
   initialize: () => {
     const today = getTodayKey()
 
-    // Fetch initial data from Supabase
-    Promise.all([
-      supabase.from('birres').select('*'),
-      supabase.from('historial').select('*'),
-    ]).then(([{ data: birresData }, { data: historialData }]) => {
+    const fetchData = async () => {
+      // Use allSettled so one failure doesn't block the other
+      const [birresResult, historialResult] = await Promise.allSettled([
+        supabase.from('birres').select('*'),
+        supabase.from('historial').select('*'),
+      ])
+
+      const birresData =
+        birresResult.status === 'fulfilled' && !birresResult.value.error
+          ? (birresResult.value.data as BirraRow[])
+          : null
+
+      const historialData =
+        historialResult.status === 'fulfilled' && !historialResult.value.error
+          ? (historialResult.value.data as HistorialRow[])
+          : null
+
+      if (birresResult.status === 'fulfilled' && birresResult.value.error) {
+        console.error('[beBirra] Error llegint birres:', birresResult.value.error.message)
+      }
+      if (historialResult.status === 'fulfilled' && historialResult.value.error) {
+        console.error('[beBirra] Error llegint historial:', historialResult.value.error.message)
+      }
+
       set((state) => ({
         isLoaded: true,
         membres: state.membres.map((m) => {
-          const row = (birresData as BirraRow[] | null)?.find((r) => r.membre_id === m.id)
-          const memberHistorial = ((historialData as HistorialRow[] | null) ?? [])
+          const row = birresData?.find((r) => r.membre_id === m.id)
+          const memberHistorial = (historialData ?? [])
             .filter((h) => h.membre_id === m.id)
             .map((h) => ({ date: h.data, count: h.count }))
           return {
@@ -60,11 +79,13 @@ export const useBirraStore = create<BirraStore>()((set, get) => ({
           }
         }),
       }))
-    }).catch(() => {
+    }
+
+    fetchData().catch((err) => {
+      console.error('[beBirra] Error inicialitzant:', err)
       set({ isLoaded: true })
     })
 
-    // Subscribe to real-time changes on birres table
     const channel = supabase
       .channel('birres-realtime')
       .on(
@@ -87,7 +108,11 @@ export const useBirraStore = create<BirraStore>()((set, get) => ({
           }
         }
       )
-      .subscribe()
+      .subscribe((status) => {
+        if (status === 'SUBSCRIBED') {
+          console.log('[beBirra] Realtime connectat ✓')
+        }
+      })
 
     return () => {
       supabase.removeChannel(channel)
@@ -104,7 +129,7 @@ export const useBirraStore = create<BirraStore>()((set, get) => ({
     const newTotal = membre.birresTotal + 1
     const newHistorialCount = (todayHistorial?.count ?? 0) + 1
 
-    // Optimistic update
+    // Optimistic update — UI responds immediately
     set((s) => ({
       membres: s.membres.map((m) => {
         if (m.id !== membreId) return m
@@ -115,17 +140,18 @@ export const useBirraStore = create<BirraStore>()((set, get) => ({
       }),
     }))
 
-    // Sync to Supabase
-    await Promise.all([
-      supabase.from('birres').upsert(
-        { membre_id: membreId, birres_total: newTotal, birres_avui: newAvui, avui_date: today },
-        { onConflict: 'membre_id' }
-      ),
-      supabase.from('historial').upsert(
-        { membre_id: membreId, data: today, count: newHistorialCount },
-        { onConflict: 'membre_id,data' }
-      ),
-    ])
+    // Save to Supabase
+    const { error: birresError } = await supabase.from('birres').upsert(
+      { membre_id: membreId, birres_total: newTotal, birres_avui: newAvui, avui_date: today },
+      { onConflict: 'membre_id' }
+    )
+    if (birresError) console.error('[beBirra] Error guardant birra:', birresError.message)
+
+    const { error: historialError } = await supabase.from('historial').upsert(
+      { membre_id: membreId, data: today, count: newHistorialCount },
+      { onConflict: 'membre_id,data' }
+    )
+    if (historialError) console.error('[beBirra] Error guardant historial:', historialError.message)
   },
 
   removeBirra: async (membreId) => {
@@ -137,7 +163,6 @@ export const useBirraStore = create<BirraStore>()((set, get) => ({
     const newTotal = Math.max(0, membre.birresTotal - 1)
     const todayCount = Math.max(0, (membre.historial.find((h) => h.date === today)?.count ?? 0) - 1)
 
-    // Optimistic update
     set((s) => ({
       membres: s.membres.map((m) => {
         if (m.id !== membreId) return m
@@ -148,30 +173,26 @@ export const useBirraStore = create<BirraStore>()((set, get) => ({
       }),
     }))
 
-    // Sync to Supabase
-    await Promise.all([
-      supabase.from('birres').upsert(
-        { membre_id: membreId, birres_total: newTotal, birres_avui: newAvui, avui_date: today },
-        { onConflict: 'membre_id' }
-      ),
-      supabase.from('historial').upsert(
-        { membre_id: membreId, data: today, count: todayCount },
-        { onConflict: 'membre_id,data' }
-      ),
-    ])
+    const { error: birresError } = await supabase.from('birres').upsert(
+      { membre_id: membreId, birres_total: newTotal, birres_avui: newAvui, avui_date: today },
+      { onConflict: 'membre_id' }
+    )
+    if (birresError) console.error('[beBirra] Error traient birra:', birresError.message)
+
+    const { error: historialError } = await supabase.from('historial').upsert(
+      { membre_id: membreId, data: today, count: todayCount },
+      { onConflict: 'membre_id,data' }
+    )
+    if (historialError) console.error('[beBirra] Error actualitzant historial:', historialError.message)
   },
 
   resetAvui: async () => {
     const today = getTodayKey()
-
-    // Optimistic update
     set((s) => ({
       membres: s.membres.map((m) => ({ ...m, birresAvui: 0 })),
     }))
-
-    const currentMembres = get().membres
-    await supabase.from('birres').upsert(
-      currentMembres.map((m) => ({
+    const { error } = await supabase.from('birres').upsert(
+      get().membres.map((m) => ({
         membre_id: m.id,
         birres_total: m.birresTotal,
         birres_avui: 0,
@@ -179,33 +200,30 @@ export const useBirraStore = create<BirraStore>()((set, get) => ({
       })),
       { onConflict: 'membre_id' }
     )
+    if (error) console.error('[beBirra] Error reset avui:', error.message)
   },
 
   resetTotal: async () => {
     const today = getTodayKey()
-
-    // Optimistic update
     set((s) => ({
-      membres: s.membres.map((m) => ({
-        ...m,
-        birresAvui: 0,
-        birresTotal: 0,
-        historial: [],
-      })),
+      membres: s.membres.map((m) => ({ ...m, birresAvui: 0, birresTotal: 0, historial: [] })),
     }))
+    const { error: birresError } = await supabase.from('birres').upsert(
+      get().membres.map((m) => ({
+        membre_id: m.id,
+        birres_total: 0,
+        birres_avui: 0,
+        avui_date: today,
+      })),
+      { onConflict: 'membre_id' }
+    )
+    if (birresError) console.error('[beBirra] Error reset total:', birresError.message)
 
-    await Promise.all([
-      supabase.from('birres').upsert(
-        get().membres.map((m) => ({
-          membre_id: m.id,
-          birres_total: 0,
-          birres_avui: 0,
-          avui_date: today,
-        })),
-        { onConflict: 'membre_id' }
-      ),
-      supabase.from('historial').delete().not('membre_id', 'is', null),
-    ])
+    const { error: historialError } = await supabase
+      .from('historial')
+      .delete()
+      .not('membre_id', 'is', null)
+    if (historialError) console.error('[beBirra] Error esborrant historial:', historialError.message)
   },
 
   getTodayTotal: () => {
