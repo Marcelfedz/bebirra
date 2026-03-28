@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Bebas_Neue, Source_Sans_3 } from 'next/font/google'
 import './globals.css'
 import Sidebar from '@/components/Sidebar'
+import BirraProvider from '@/components/BirraProvider'
 
 const bebasNeue = Bebas_Neue({
   weight: '400',
@@ -30,15 +31,17 @@ export default function RootLayout({
   return (
     <html lang="ca" className={`${bebasNeue.variable} ${sourceSans.variable}`}>
       <body className="bg-[#0D0D0D] text-white font-body antialiased min-h-screen">
-        <div className="flex min-h-screen">
-          {/* Sidebar handles both mobile (fixed overlay) and desktop (sticky) internally */}
-          <Sidebar />
+        <BirraProvider>
+          <div className="flex min-h-screen">
+            {/* Sidebar handles both mobile (fixed overlay) and desktop (sticky) internally */}
+            <Sidebar />
 
-          {/* Main content — on desktop, sidebar takes 260px, so we add left margin */}
-          <main className="flex-1 min-w-0 lg:ml-[260px]">
-            {children}
-          </main>
-        </div>
+            {/* Main content — on desktop, sidebar takes 260px, so we add left margin */}
+            <main className="flex-1 min-w-0 lg:ml-[260px]">
+              {children}
+            </main>
+          </div>
+        </BirraProvider>
       </body>
     </html>
   )
