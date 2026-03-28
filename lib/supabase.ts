@@ -9,6 +9,8 @@ export type BirraRow = {
   membre_id: string
   birres_total: number
   birres_avui: number
+  cubates_total: number
+  cubates_avui: number
   avui_date: string
 }
 

@@ -5,6 +5,7 @@ export type Membre = {
   descripcio: string
   imatge: string
   birresTotal: number
+  cubatesTotal: number
   color: string
 }
 
@@ -16,6 +17,7 @@ export const membres: Membre[] = [
     descripcio: "L'enginyer d'IA del grup. Va anar a veure la ATP de tennis i mai ha deixat d'explicar-ho.",
     imatge: "/marcel_fernandez.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#F5A623",
   },
   {
@@ -25,6 +27,7 @@ export const membres: Membre[] = [
     descripcio: "Amant del LoL i dels porros. Porta un robot al cor, literalment.",
     imatge: "/alberto_rodriguez.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#E85D04",
   },
   {
@@ -34,6 +37,7 @@ export const membres: Membre[] = [
     descripcio: "El cantant oficial dels Lliures. Si hi ha karaoke, és seu.",
     imatge: "/eric_velazquez.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#9B5DE5",
   },
   {
@@ -43,6 +47,7 @@ export const membres: Membre[] = [
     descripcio: "Nini il·lustrat. Fuma pitis de liar, ha estudiat matemàtiques i fa filosofia per sentir-se guai.",
     imatge: "/marc_garcia.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#00B4D8",
   },
   {
@@ -52,6 +57,7 @@ export const membres: Membre[] = [
     descripcio: "Rabo gegant. Follador nat, amant de la roncola i les festes fins a l'alba.",
     imatge: "/albert_reina.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#F72585",
   },
   {
@@ -61,6 +67,7 @@ export const membres: Membre[] = [
     descripcio: "Birres a mansalva i casat amb la Queralt. Un bon nini de tota la vida.",
     imatge: "/arnau_garcia.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#2DC653",
   },
   {
@@ -70,6 +77,7 @@ export const membres: Membre[] = [
     descripcio: "Va dir que deixava el tabac. Va tornar. Beu tantes birres que arriba un punt que ja no se l'entén.",
     imatge: "/pol_sistero.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#FF6B6B",
   },
   {
@@ -79,6 +87,7 @@ export const membres: Membre[] = [
     descripcio: "Memòries de grifo. Surt a la Rasa a ofegar les penes. Fan del teletreball.",
     imatge: "/hector_corzo.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#FFB703",
   },
   {
@@ -88,6 +97,7 @@ export const membres: Membre[] = [
     descripcio: "El tio del tupper al kebab. Es cuida massa. Mai l'hem vist amb una birra. Sospitós.",
     imatge: "/alex_andres.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#4CC9F0",
   },
   {
@@ -97,6 +107,7 @@ export const membres: Membre[] = [
     descripcio: "Porros, cubates i birres a mansalva. Porta les festes de DKK. Tindrà problemes en un futur, però de moment s'ho passa d'allò més bé.",
     imatge: "/gerard_vilanova.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#FB8500",
   },
   {
@@ -106,6 +117,7 @@ export const membres: Membre[] = [
     descripcio: "Casat amb la Laura. Fa 10 anys que no surt de festa. Llegenda urbana dels Lliures.",
     imatge: "/pau_vilanova.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#8338EC",
   },
   {
@@ -115,6 +127,7 @@ export const membres: Membre[] = [
     descripcio: "Li agrada l'escalada però té un passat fosc. S'ha comprat una furgoneta tot xula.",
     imatge: "/marc_llorens.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#06D6A0",
   },
   {
@@ -124,6 +137,7 @@ export const membres: Membre[] = [
     descripcio: "Simplement boig pel Santqui. Ha fet una marató. No sabem com.",
     imatge: "/albert_vich.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#EF233C",
   },
   {
@@ -133,6 +147,7 @@ export const membres: Membre[] = [
     descripcio: "El menda del grup. Li encanta la Pikkara i els cubates, tot i ser diabètic. No sap dir que no a una festa. Seguim buscant la Senyora Opiwa.",
     imatge: "/pol_oller.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#FFC300",
   },
   {
@@ -142,6 +157,7 @@ export const membres: Membre[] = [
     descripcio: "Un tio de negocis. Segurament acabarà a la presó blanquejant diners, però s'en sortirà.",
     imatge: "/pol_patsi.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#3A86FF",
   },
   {
@@ -151,6 +167,7 @@ export const membres: Membre[] = [
     descripcio: "Professor de batxillerat. En poc es tirarà una professora. Amant de la lectura i l'òpera amb milfs.",
     imatge: "/quim_ruiz.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#FF006E",
   },
   {
@@ -160,6 +177,7 @@ export const membres: Membre[] = [
     descripcio: "Enamorat de la Núria i perfecte empleat de Kutxabank. Fiabilitat i eficiència.",
     imatge: "/oriol_jorda.png",
     birresTotal: 0,
+    cubatesTotal: 0,
     color: "#52B788",
   },
 ]

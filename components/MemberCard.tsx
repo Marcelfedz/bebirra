@@ -93,24 +93,36 @@ export default function MemberCard({ id, nom, alias, descripcio, imatge, color, 
 
             <p className="text-white/40 text-xs mt-2 leading-relaxed line-clamp-2">{descripcio}</p>
 
-            {/* Total birres */}
-            <div className="mt-2 flex items-center gap-1">
-              <span className="text-white/25 text-xs">total:</span>
-              <span className="text-xs font-semibold" style={{ color: `${color}cc` }}>
-                {membre?.birresTotal ?? 0} birres
-              </span>
+            {/* Totals */}
+            <div className="mt-2 flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                <span className="text-white/25 text-xs">🍺</span>
+                <span className="text-xs font-semibold" style={{ color: `${color}cc` }}>
+                  {membre?.birresTotal ?? 0}
+                </span>
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="text-white/25 text-xs">🍹</span>
+                <span className="text-xs font-semibold" style={{ color: `${color}cc` }}>
+                  {membre?.cubatesTotal ?? 0}
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Counter section */}
         <div
-          className="px-5 pb-5 pt-2 border-t border-white/5"
+          className="px-5 pb-5 pt-3 border-t border-white/5 space-y-2"
           style={{ background: 'rgba(0,0,0,0.2)' }}
         >
           <div className="flex items-center justify-between">
-            <span className="text-white/30 text-xs uppercase tracking-wider">Avui</span>
-            <BirraCounter membreId={id} membreColor={color} />
+            <span className="text-white/25 text-xs uppercase tracking-wider">Birres</span>
+            <BirraCounter membreId={id} membreColor={color} type="birra" />
+          </div>
+          <div className="flex items-center justify-between">
+            <span className="text-white/25 text-xs uppercase tracking-wider">Cubates</span>
+            <BirraCounter membreId={id} membreColor={color} type="cubata" />
           </div>
         </div>
       </motion.div>

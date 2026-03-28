@@ -9,8 +9,9 @@ import { membres } from '@/data/membres'
 import { useBirraStore } from '@/store/birraStore'
 
 export default function Home() {
-  const { membres: membreState, resetAvui, resetTotal, getTodayTotal } = useBirraStore()
+  const { membres: membreState, resetAvui, resetTotal, getTodayTotal, getTodayCubatesTotal } = useBirraStore()
   const todayTotal = getTodayTotal()
+  const todayCubatesTotal = getTodayCubatesTotal()
   const [confirmReset, setConfirmReset] = useState(false)
 
   const handleResetTotal = () => {
@@ -39,27 +40,41 @@ export default function Home() {
           className="mb-10 rounded-2xl border border-white/8 p-5 flex flex-wrap gap-6 items-center justify-between"
           style={{ background: 'linear-gradient(135deg, rgba(245,166,35,0.06), rgba(0,0,0,0.4))' }}
         >
-          <div>
-            <p className="text-white/30 text-xs uppercase tracking-widest mb-1">Birres avui</p>
-            <motion.p
-              key={todayTotal}
-              initial={{ scale: 1.3, color: '#F5A623' }}
-              animate={{ scale: 1, color: '#F5A623' }}
-              className="font-display text-5xl text-amber-400"
-            >
-              {todayTotal}
-            </motion.p>
+          <div className="flex gap-8">
+            <div>
+              <p className="text-white/30 text-xs uppercase tracking-widest mb-1">Birres avui</p>
+              <motion.p
+                key={todayTotal}
+                initial={{ scale: 1.3 }}
+                animate={{ scale: 1 }}
+                className="font-display text-5xl text-amber-400"
+              >
+                {todayTotal}
+              </motion.p>
+            </div>
+            <div>
+              <p className="text-white/30 text-xs uppercase tracking-widest mb-1">Cubates avui</p>
+              <motion.p
+                key={todayCubatesTotal}
+                initial={{ scale: 1.3 }}
+                animate={{ scale: 1 }}
+                className="font-display text-5xl"
+                style={{ color: '#a78bfa' }}
+              >
+                {todayCubatesTotal}
+              </motion.p>
+            </div>
           </div>
 
           <div className="flex gap-6">
             <div>
-              <p className="text-white/30 text-xs uppercase tracking-widest mb-1">Membres actius</p>
+              <p className="text-white/30 text-xs uppercase tracking-widest mb-1">Membres</p>
               <p className="font-display text-3xl text-white/70">{membres.length}</p>
             </div>
             <div>
               <p className="text-white/30 text-xs uppercase tracking-widest mb-1">Bevedors avui</p>
               <p className="font-display text-3xl text-white/70">
-                {membreState.filter((m) => m.birresAvui > 0).length}
+                {membreState.filter((m) => m.birresAvui > 0 || m.cubatesAvui > 0).length}
               </p>
             </div>
           </div>

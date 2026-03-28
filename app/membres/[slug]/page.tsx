@@ -234,35 +234,50 @@ function MemberProfile({ membre }: { membre: (typeof membres)[0] }) {
             <p className="text-white/55 leading-relaxed max-w-md">{membre.descripcio}</p>
           </div>
 
-          {/* Total badge */}
-          <div className="flex flex-col items-center">
-            <span className="text-white/25 text-xs uppercase tracking-widest mb-1">Total birres</span>
-            <span className="font-display text-5xl" style={{ color: membre.color }}>
-              {state?.birresTotal ?? 0}
-            </span>
+          {/* Total badges */}
+          <div className="flex gap-5">
+            <div className="flex flex-col items-center">
+              <span className="text-white/25 text-xs uppercase tracking-widest mb-1">Birres</span>
+              <span className="font-display text-4xl" style={{ color: membre.color }}>
+                {state?.birresTotal ?? 0}
+              </span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-white/25 text-xs uppercase tracking-widest mb-1">Cubates</span>
+              <span className="font-display text-4xl" style={{ color: '#a78bfa' }}>
+                {state?.cubatesTotal ?? 0}
+              </span>
+            </div>
           </div>
         </div>
       </motion.div>
 
-      {/* Today counter */}
+      {/* Today counters */}
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.5 }}
-        className="rounded-2xl border border-white/8 p-6 mb-6 flex items-center justify-between"
+        className="rounded-2xl border border-white/8 mb-6 overflow-hidden"
         style={{ background: `linear-gradient(135deg, ${membre.color}08, rgba(0,0,0,0.4))` }}
       >
-        <div>
-          <p className="text-white/30 text-xs uppercase tracking-widest mb-1">Avui</p>
-          <p className="text-white/60 text-sm">
-            {state?.birresAvui === 0
-              ? 'Encara res... de moment'
-              : state?.birresAvui === 1
-              ? '1 birra al cos'
-              : `${state?.birresAvui} birres al cos`}
-          </p>
+        <div className="p-5 flex items-center justify-between border-b border-white/5">
+          <div>
+            <p className="text-white/30 text-xs uppercase tracking-widest mb-0.5">Birres avui</p>
+            <p className="text-white/50 text-sm">
+              {(state?.birresAvui ?? 0) === 0 ? 'Cap' : `${state?.birresAvui} al cos`}
+            </p>
+          </div>
+          <BirraCounter membreId={membre.id} membreColor={membre.color} type="birra" />
         </div>
-        <BirraCounter membreId={membre.id} membreColor={membre.color} />
+        <div className="p-5 flex items-center justify-between">
+          <div>
+            <p className="text-white/30 text-xs uppercase tracking-widest mb-0.5">Cubates avui</p>
+            <p className="text-white/50 text-sm">
+              {(state?.cubatesAvui ?? 0) === 0 ? 'Cap' : `${state?.cubatesAvui} al cos`}
+            </p>
+          </div>
+          <BirraCounter membreId={membre.id} membreColor="#a78bfa" type="cubata" />
+        </div>
       </motion.div>
 
       {/* 7-day chart */}
